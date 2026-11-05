@@ -1,0 +1,545 @@
+/**
+ * index.css — Design System core.
+ * Tailwind v4 (@theme tokens) + handcrafted Claymorphism & Glassmorphism
+ * utilities, medical-grade focus states, keyframes and Swiper skin overrides.
+ * Palette extracted from the reference: porcelain white, clinical teal,
+ * soft medical blue, fresh mint and deep slate navy typography.
+ */
+@import "tailwindcss";
+
+@theme {
+  /* Typography */
+  --font-display: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand palette (reference image harmony) */
+  --color-porcelain: #f8fafc;
+  --color-alabaster: #f0f7ff;
+  --color-teal-brand: #0d9488;
+  --color-blue-med: #0284c7;
+  --color-mint-soft: #99f6e4;
+  --color-mint-mist: #ccfbf1;
+  --color-sky-soft: #e0f2fe;
+  --color-navy-deep: #0f172a;
+  --color-slate-med: #475569;
+  --color-verified: #10b981;
+  --color-demo-amber: #f59e0b;
+
+  /* Claymorphic dual-inner-shadow elevation tokens */
+  --shadow-clay: 0 20px 40px -15px rgba(13, 148, 136, 0.12),
+    inset 0 -6px 12px rgba(14, 165, 233, 0.08),
+    inset 0 6px 12px rgba(255, 255, 255, 0.95);
+  --shadow-clay-lg: 0 32px 64px -24px rgba(13, 148, 136, 0.22),
+    inset 0 -8px 16px rgba(14, 165, 233, 0.1),
+    inset 0 8px 16px rgba(255, 255, 255, 0.95);
+  --shadow-clay-sm: 0 10px 24px -10px rgba(13, 148, 136, 0.16),
+    inset 0 -4px 8px rgba(14, 165, 233, 0.07),
+    inset 0 4px 8px rgba(255, 255, 255, 0.95);
+  --shadow-clay-btn: 0 14px 30px -10px rgba(13, 148, 136, 0.45),
+    inset 0 2px 6px rgba(255, 255, 255, 0.45),
+    inset 0 -4px 8px rgba(2, 132, 199, 0.35);
+  --shadow-glass: 0 8px 32px 0 rgba(2, 132, 199, 0.08);
+
+  /* Motion */
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-shimmer: shimmer 2.8s linear infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+  /* ROOT CAUSE FIX (menu scrollbar flash): the gutter is permanently
+     reserved, so locking body scroll when the mobile nav opens no longer
+     removes/restores the page scrollbar — no flash, no layout shift. */
+  scrollbar-gutter: stable;
+}
+
+html,
+body {
+  overflow-x: hidden; /* hard guard: zero horizontal bleed 320px→2560px */
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-slate-med);
+  background: var(--color-porcelain);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ambient porcelain→alabaster canvas with soft mint/sky light pools */
+.page-canvas {
+  background:
+    radial-gradient(58rem 40rem at 108% -8%, rgba(153, 246, 228, 0.5), transparent 60%),
+    radial-gradient(52rem 38rem at -12% 12%, rgba(224, 242, 254, 0.85), transparent 55%),
+    radial-gradient(46rem 40rem at 50% 118%, rgba(204, 251, 241, 0.45), transparent 60%),
+    linear-gradient(180deg, #f8fafc 0%, #f0f7ff 55%, #f8fafc 100%);
+}
+
+::selection {
+  background: rgba(13, 148, 136, 0.22);
+  color: #0f172a;
+}
+
+/* Accessible, always-visible focus indicator */
+:focus-visible {
+  outline: 3px solid rgba(13, 148, 136, 0.5);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* Subtle clinical scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+}
+::-webkit-scrollbar-track {
+  background: #eaf4f9;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #99f6e4, #7dd3fc);
+  border-radius: 8px;
+  border: 2px solid #eaf4f9;
+}
+
+/* Invisible, silent scrolling (mobile menu sheet holds no vertical bar) */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Slim branded HORIZONTAL scrollbar — used for the mobile menu pill strip */
+.h-scrollbar {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(13, 148, 136, 0.55) transparent;
+}
+.h-scrollbar::-webkit-scrollbar {
+  height: 5px;
+}
+.h-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.h-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #99f6e4, #7dd3fc);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Claymorphic surfaces                                                */
+/* ------------------------------------------------------------------ */
+
+/* Standard clay card — inflated, matte-glossy, dual inner shadows */
+.clay {
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: var(--shadow-clay);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.clay-lg {
+  background: #ffffff;
+  border-radius: 32px;
+  box-shadow: var(--shadow-clay-lg);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.clay-sm {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: var(--shadow-clay-sm);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Inset/pressed clay well (used for input shells & stat wells) */
+.clay-inset {
+  background: linear-gradient(160deg, #ffffff, #f2fafd);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 3px 10px rgba(2, 132, 199, 0.1),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(226, 244, 250, 0.9);
+}
+
+/* Tactile lift for every interactive clay surface */
+.clay-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s ease;
+}
+.clay-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-clay-lg);
+}
+.clay-hover:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* ------------------------------------------------------------------ */
+/* Glassmorphic surfaces                                               */
+/* ------------------------------------------------------------------ */
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass-deep {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(26px) saturate(1.5);
+  -webkit-backdrop-filter: blur(26px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 18px 48px -12px rgba(2, 132, 199, 0.18);
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+
+/* Primary clay CTA — teal→blue gloss pill with inner light */
+.btn-primary {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0d9488 0%, #0ea5b7 52%, #0284c7 100%);
+  border-radius: 999px;
+  padding: 0.95rem 1.9rem;
+  box-shadow: var(--shadow-clay-btn);
+  overflow: hidden;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+.btn-primary::after {
+  /* travelling gloss highlight */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  z-index: -1;
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.05);
+}
+.btn-primary:hover::after {
+  transform: translateX(120%);
+}
+.btn-primary:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+/* Secondary ghost-glass button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #0f766e;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(153, 246, 228, 0.9);
+  border-radius: 999px;
+  padding: 0.9rem 1.75rem;
+  box-shadow: 0 8px 20px -10px rgba(13, 148, 136, 0.25),
+    inset 0 2px 6px rgba(255, 255, 255, 0.9);
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.btn-ghost:hover {
+  transform: translateY(-3px);
+  background: #ffffff;
+  box-shadow: 0 14px 30px -10px rgba(13, 148, 136, 0.3),
+    inset 0 2px 6px rgba(255, 255, 255, 0.9);
+}
+.btn-ghost:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+/* Emerald instant-contact (call / whatsapp) */
+.btn-emerald {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 999px;
+  padding: 0.9rem 1.75rem;
+  box-shadow: 0 14px 28px -10px rgba(16, 185, 129, 0.5),
+    inset 0 2px 6px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(4, 120, 87, 0.35);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+}
+.btn-emerald:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.06);
+}
+.btn-emerald:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography helpers                                                  */
+/* ------------------------------------------------------------------ */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #0d9488 10%, #0284c7 60%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Eyebrow / section kicker chip */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0f766e;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(153, 246, 228, 0.9);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  box-shadow: var(--shadow-clay-sm);
+}
+
+/* ------------------------------------------------------------------ */
+/* Form controls — clay-inset inputs with validation states            */
+/* ------------------------------------------------------------------ */
+.input-clay {
+  width: 100%;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: linear-gradient(160deg, #ffffff, #f3fafd);
+  border: 1.5px solid rgba(224, 242, 254, 1);
+  border-radius: 16px;
+  padding: 0.85rem 1.1rem;
+  box-shadow:
+    inset 0 3px 8px rgba(2, 132, 199, 0.07),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.9);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.input-clay::placeholder {
+  color: #94a3b8;
+}
+.input-clay:hover {
+  border-color: #99f6e4;
+}
+.input-clay:focus {
+  outline: none;
+  border-color: #0d9488;
+  background: #ffffff;
+  box-shadow:
+    inset 0 2px 6px rgba(2, 132, 199, 0.06),
+    0 0 0 4px rgba(13, 148, 136, 0.14);
+}
+.input-clay[aria-invalid="true"] {
+  border-color: #f59e0b;
+  box-shadow:
+    inset 0 2px 6px rgba(245, 158, 11, 0.08),
+    0 0 0 4px rgba(245, 158, 11, 0.12);
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.45rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Badges                                                              */
+/* ------------------------------------------------------------------ */
+.badge-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #92400e;
+  background: linear-gradient(160deg, #fffbeb, #fef3c7);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  box-shadow: 0 4px 12px -4px rgba(245, 158, 11, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.85);
+}
+
+.badge-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #065f46;
+  background: linear-gradient(160deg, #ecfdf5, #d1fae5);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  box-shadow: 0 4px 12px -4px rgba(16, 185, 129, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.85);
+}
+
+/* ------------------------------------------------------------------ */
+/* Keyframes                                                           */
+/* ------------------------------------------------------------------ */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0.001deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(0.001deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  80%,
+  100% {
+    transform: scale(1.85);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+/* Orbiting CSS fallback dots for the 3D canvas reduced-motion state */
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(var(--orbit-r, 7rem)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(var(--orbit-r, 7rem)) rotate(-360deg);
+  }
+}
+.animate-orbit {
+  animation: orbit 12s linear infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* FAQ Accordion — grid-rows height transition (GPU-friendly)          */
+/* ------------------------------------------------------------------ */
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.faq-panel > div {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* Swiper.js skin — clay bullets & soft navigation                     */
+/* ------------------------------------------------------------------ */
+.swiper {
+  padding-bottom: 3.25rem !important;
+}
+.swiper-pagination {
+  bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+}
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #c8ecf3;
+  opacity: 1;
+  box-shadow: inset 0 2px 3px rgba(2, 132, 199, 0.18),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.9);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.swiper-pagination-bullet-active {
+  width: 30px;
+  background: linear-gradient(90deg, #0d9488, #0284c7);
+  box-shadow: 0 4px 10px -2px rgba(13, 148, 136, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion — calm, static clinical experience                   */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-marquee,
+  .animate-orbit {
+    animation: none !important;
+  }
+}
